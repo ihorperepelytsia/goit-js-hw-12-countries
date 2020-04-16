@@ -1,6 +1,5 @@
 var debounce = require('lodash.debounce');
-
-import { alert, notice, info, success, error } from '@pnotify/core';
+import { error } from '@pnotify/core';
 import '@pnotify/core/BrightTheme.css';
 import '@pnotify/core/dist/PNotify.css';
 
@@ -13,14 +12,18 @@ const refs = {
   indicatedCountry: document.querySelector('.indicated-country'),
 };
 
-refs.inputCountryName.addEventListener('input', getСountries);
-
 const getСountries = debounce(e => {
   fetchCountriesApi.fetchCountries(e.target.value).then(respounse => {
     createMarkupCountry(respounse);
   });
   clearListItems();
 }, 500);
+
+refs.inputCountryName.addEventListener('input', getСountries);
+
+function clearListItems() {
+  refs.indicatedCountry.innerHTML = '';
+}
 
 function createMarkupCountry(items) {
   if (items.length > 1 && items.length < 10) {
@@ -35,10 +38,6 @@ function createMarkupCountry(items) {
     return;
   }
   error({
-    text: 'Too many matches found. Please enter a more specific query!',
+    text: 'Too many matches found.Please enter more specific query!',
   });
-}
-
-function clearListItems() {
-  refs.indicatedCountry.innerHTML = '';
 }
